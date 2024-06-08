@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -18,7 +17,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "../ui/textarea";
 import ImageUpload from "../custom ui/ImageUpload";
 import { useRouter } from "next/navigation";
-
+import { useState } from "react";
+import toast from "react-hot-toast";
 
 const formSchema = z.object({
   title: z.string().min(2).max(20),
@@ -27,7 +27,9 @@ const formSchema = z.object({
 });
 
 const CollectionsForm = () => {
-  const router =useRouter();
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -37,7 +39,21 @@ const CollectionsForm = () => {
     },
   });
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    console.log(values);
+    try {
+      setLoading(true);
+      const res = await fetch("/api/collections", {
+        method: "POST",
+        body: JSON.stringify(values),
+      });
+      if (res.ok) {
+        setLoading(false);
+        toast.success("danh mục đã được tạo");
+        router.push("/collections");
+      }
+    } catch (err) {
+      console.log("[CollectionForm_POST]", err);
+      toast.error("Có gì đó đã sai ! Thử lại nha");
+    }
   };
   return (
     <div className="p-10">
@@ -50,7 +66,7 @@ const CollectionsForm = () => {
             name="title"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Title</FormLabel>
+                <FormLabel>Tên Danh Mục</FormLabel>
                 <FormControl>
                   <Input placeholder="Title" {...field} />
                 </FormControl>
@@ -64,7 +80,7 @@ const CollectionsForm = () => {
             name="description"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Description</FormLabel>
+                <FormLabel>Mô Tả</FormLabel>
                 <FormControl>
                   <Textarea placeholder="Title" {...field} rows={5} />
                 </FormControl>
@@ -78,7 +94,7 @@ const CollectionsForm = () => {
             name="image"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Image</FormLabel>
+                <FormLabel>Hình Ảnh</FormLabel>
                 <FormControl>
                   <ImageUpload
                     value={field.value ? [field.value] : []}
@@ -91,9 +107,16 @@ const CollectionsForm = () => {
             )}
           />
           <div className="flex gap-5">
-          <Button type="submit" className="bg-blue-1 text-white">Submit</Button>
-          <Button type="button" onClick={()=>router.push("/collections")} className="bg-blue-1 text-white">Discard</Button>
-
+            <Button type="submit" className="bg-blue-1 text-white">
+              Thêm
+            </Button>
+            <Button
+              type="button"
+              onClick={() => router.push("/collections")}
+              className="bg-blue-1 text-white"
+            >
+              Về Danh Mục
+            </Button>
           </div>
         </form>
       </Form>

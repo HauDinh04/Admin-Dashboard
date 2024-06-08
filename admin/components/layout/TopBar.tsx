@@ -12,7 +12,7 @@ const TopBar = () => {
   const pathName=usePathname();
 
   return (
-    <div className="sticky top-0 z-20 w-full flex justify-between items-center px-8 py-4 b-blue-2 shadow-xl lg:hidden">
+    <div className="sticky top-0 z-0 w-full flex justify-between items-center px-8 py-4 b-blue-2 shadow-xl lg:hidden">
       <Image src={"/logo1.png"} alt="logo" width={100} height={50} />
       <div className="flex gap-8 max-md:hidden">
         {navLinks.map((link) => (
