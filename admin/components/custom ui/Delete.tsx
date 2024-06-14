@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { Trash } from "lucide-react";
 import {
   AlertDialog,
@@ -16,29 +16,30 @@ import { Button } from "../ui/button";
 import { useState } from "react";
 import toast from "react-hot-toast";
 
-interface DeleteProps{
-  id:string,
+interface DeleteProps {
+  id: string;
+  item: string;
 }
 
-
-const Delete:React.FC<DeleteProps> = ({id}) => {
-  const [loading,setLoading]=useState(false);
-  const onDelete =async()=>{
-    try{
+const Delete: React.FC<DeleteProps> = ({ id, item }) => {
+  const [loading, setLoading] = useState(false);
+  const onDelete = async () => {
+    try {
       setLoading(true);
-      const res =await fetch(`/api/collections/${id}`,{
-        method:"DELETE"
-      })
-      if(res.ok){
-        setLoading(false)
-        window.location.href=('/collections');
-        toast.success("Đã xóa thành công")
+      const itemType = item === "product" ? "products" : "collections";
+      const res = await fetch(`/api/${itemType}/${id}`, {
+        method: "DELETE",
+      });
+      if (res.ok) {
+        setLoading(false);
+        window.location.href = (`/${itemType}`);
+        toast.success(`${itemType} Đã xóa thành công`);
       }
-    }catch(err){
+    } catch (err) {
       console.log(err);
-      toast.error("Có gì đó đã sai, hãy thử lại")
+      toast.error("Có gì đó đã sai, hãy thử lại");
     }
-  }
+  };
   return (
     <AlertDialog>
       <AlertDialogTrigger>
@@ -48,14 +49,18 @@ const Delete:React.FC<DeleteProps> = ({id}) => {
       </AlertDialogTrigger>
       <AlertDialogContent className="bg-white text-grey-1">
         <AlertDialogHeader>
-          <AlertDialogTitle className="text-red-1">Bạn có chắc muốn xóa không ??</AlertDialogTitle>
+          <AlertDialogTitle className="text-red-1">
+            Bạn có chắc muốn xóa không ??
+          </AlertDialogTitle>
           <AlertDialogDescription className="">
-            Hành động này sẻ không hoàn tác và dữ liệu sẽ xóa khỏi DATABASE
+            Hành động này sẻ không hoàn tác và dữ liệu sẽ xóa khỏi {item}.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Hủy</AlertDialogCancel>
-          <AlertDialogAction className="bg-red-1 text-white" onClick={onDelete}>Tiếp Tục</AlertDialogAction>
+          <AlertDialogAction className="bg-red-1 text-white" onClick={onDelete}>
+            Tiếp Tục
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

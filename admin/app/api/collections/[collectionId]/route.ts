@@ -2,6 +2,7 @@ import { connectToDB } from "@/lib/mongoDB";
 import { auth } from "@clerk/nextjs/server";
 import Collection from "@/lib/models/Collection";
 import { NextRequest, NextResponse } from "next/server";
+import Product from "@/lib/models/Product";
 
 export const GET = async (
   req: NextRequest,
@@ -40,7 +41,9 @@ export const POST = async (
 
     const { title, description, image } = await req.json();
     if (!title || !image) {
-      return new NextResponse("Tiêu đề và hình ảnh là bắt buộc", { status: 400 });
+      return new NextResponse("Tiêu đề và hình ảnh là bắt buộc", {
+        status: 400,
+      });
     }
 
     collection = await Collection.findByIdAndUpdate(
@@ -68,6 +71,10 @@ export const DELETE = async (
 
     await connectToDB();
     await Collection.findByIdAndDelete(params.collectionId);
+    await Product.updateMany(
+      { collections: params.collectionId },
+      { $pull: { collections: params.collectionId } }
+    );
     return new NextResponse("Danh mục đã được xóa", { status: 200 });
   } catch (err) {
     console.error("[Collections_DELETE]", err);

@@ -43,6 +43,15 @@ const CollectionsForm: React.FC<CollectionFormProps> = ({ initialData }) => {
           image: "",
         },
   });
+  const handleKeyPress = (
+    e:
+      | React.KeyboardEvent<HTMLInputElement>
+      | React.KeyboardEvent<HTMLTextAreaElement>
+  ) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+    }
+  };
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       setLoading(true);
@@ -69,7 +78,7 @@ const CollectionsForm: React.FC<CollectionFormProps> = ({ initialData }) => {
       {initialData ? (
         <div className="flex items-center justify-between">
           <p className="text-heading2-bold">Sửa Danh Mục</p>
-          <Delete id={initialData._id}/>
+          <Delete id={initialData._id} item="collections" />
         </div>
       ) : (
         <p className="text-heading2-bold">Tạo Mới Danh Mục</p>
@@ -85,7 +94,11 @@ const CollectionsForm: React.FC<CollectionFormProps> = ({ initialData }) => {
               <FormItem>
                 <FormLabel>Tên Danh Mục</FormLabel>
                 <FormControl>
-                  <Input placeholder="Title" {...field} />
+                  <Input
+                    placeholder="Title"
+                    {...field}
+                    onKeyDown={handleKeyPress}
+                  />
                 </FormControl>
 
                 <FormMessage />
@@ -99,7 +112,12 @@ const CollectionsForm: React.FC<CollectionFormProps> = ({ initialData }) => {
               <FormItem>
                 <FormLabel>Mô Tả</FormLabel>
                 <FormControl>
-                  <Textarea placeholder="Title" {...field} rows={5} />
+                  <Textarea
+                    placeholder="Title"
+                    {...field}
+                    rows={7}
+                    onKeyDown={handleKeyPress}
+                  />
                 </FormControl>
 
                 <FormMessage />
@@ -124,13 +142,13 @@ const CollectionsForm: React.FC<CollectionFormProps> = ({ initialData }) => {
             )}
           />
           <div className="flex gap-5">
-            <Button type="submit" className="bg-blue-1 text-white">
+            <Button type="submit" className="bg-red-1 text-white">
               Thêm
             </Button>
             <Button
               type="button"
               onClick={() => router.push("/collections")}
-              className="bg-blue-1 text-white"
+              className="bg-red-1 text-white"
             >
               Về Danh Mục
             </Button>

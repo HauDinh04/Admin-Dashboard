@@ -10,17 +10,17 @@ import {
     {
       url: "/",
       icon: <LayoutDashboard />,
-      label: "Dashboard",
+      label: "Bảng Điều Khiển",
     },
     {
       url: "/collections",
       icon: <Shapes />,
-      label: "Collections",
+      label: "Danh Mục",
     },
     {
       url: "/products",
       icon: <Tag />,
-      label: "Products",
+      label: "Sản Phẩm",
     },
     {
       url: "/orders",
@@ -30,6 +30,6 @@ import {
     {
       url: "/customers",
       icon: <UsersRound />,
-      label: "Customers",
+      label: "Khách Hàng",
     },
   ];
